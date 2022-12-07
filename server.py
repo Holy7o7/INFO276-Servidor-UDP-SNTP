@@ -2,7 +2,7 @@ import socketserver, threading, time, struct, ntplib
 
 class ThreadedUDPHandler(socketserver.BaseRequestHandler):
     def handle(self):
-        data = self.request[0].strip()
+        data = self.request[0]
         socket = self.request[1]
         current_thread = threading.current_thread()
 
@@ -15,26 +15,24 @@ class ThreadedUDPHandler(socketserver.BaseRequestHandler):
         true_time = ntpTime.tx_time
 
         #Codificacion data
-        data = ntpTime.to_data()
-        data_bytes = bytearray(data)
-        new_time_data = struct.pack('!1I', TIME1970 + int(true_time))
-        new_time_data_bytes = bytearray(new_time_data)
-        data_bytes[40:43] = new_time_data_bytes
-        ntpTime.from_data(data_bytes)
+        dataBytes = bytearray(ntpTime.to_data())
+        newTimeDataBytes = bytearray(struct.pack('!1I', TIME1970 + int(true_time)))
+        dataBytes[40:43] = newTimeDataBytes
+        ntpTime.from_data(dataBytes)
 
         #print
         print("Tiempo de conexion: ", time.ctime(true_time))
         print("Tiempo establecido: ", time.ctime(ntpTime.tx_time))
  
         #respuesta del server
-        socket.sendto(data_bytes, self.client_address)
+        socket.sendto(dataBytes, self.client_address)
 
 class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer):
     pass
 
 def main():
 
-    HOST, PORT = "localhost", 3000
+    HOST, PORT = "localhost", 123
     
     server = ThreadedUDPServer((HOST, PORT), ThreadedUDPHandler)
     server_thread = threading.Thread(target=server.serve_forever)
