@@ -13,5 +13,5 @@ while(i < 10):
     received = sock.recv(1024)
     stats.from_data(received)
     print('Tiempo recibido por el usuario:', time.ctime(stats.tx_time))
-    time.sleep(5)
+    time.sleep(3)
     i = i + 1
