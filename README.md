@@ -1,4 +1,4 @@
-# INFO276-Servidor-UDP-SNTP
+# INFO276-Servidor-UDP-SNTP (V 1.0)
 
 Tarea de INFO276-Redes, Servidor programado en Python que recibe clientes y les sincroniza la hora.
 
